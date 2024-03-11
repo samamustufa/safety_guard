@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/welcomepage.css' %}">
+    <title>Welcome</title>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <h2>SafeTrik</h2>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="{% url 'loginPage' %}">Login</a></li>
+                <li><a href="#">About us</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="welcometext">
+        <h1 class="typed">SafetyGuard - Intelligent Monitoring System</h1>
+    </div>
+    <div class="container">
+        <div class="box1">
+
+            <div class="heading">
+                <h2>Helmet & Vest Detection</h2>
+            </div>
+            <div class="helmet_img"><img src="{% static 'img/helmetvest_img_wel.jpg' %}" alt=""></div>
+            <div class="boxcontent">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et pariatur rem dolorum
+                sed. Voluptatem commodi voluptate, eum dolorum dolores quod hic nostrum corporis distinctio quidem?
+            </div>
+            <div class="helmet_button"><a href="http://127.0.0.1:8000/uploadvideo/">Open</a></div>
+
+        </div>
+
+        <div class="box2">
+
+            <div class="heading">
+                <h2>Restricted Area</h2>
+            </div>
+            <div class="restrict_img"></div>
+            <div class="boxcontent">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ipsa voluptas
+                cupiditate perferendis eos. Libero corrupti quibusdam cum ipsum, suscipit laboriosam dolor at porro
+                recusandae?</div>
+            <div class="restrict_button"><a href="http://127.0.0.1:8000/restricted-area/">Open</a></div>
+
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

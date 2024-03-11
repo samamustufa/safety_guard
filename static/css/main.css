@@ -1,0 +1,223 @@
+@import url("https://fonts.googleapis.com/css2? family=Poppins:wght@300%;400;500;600;700;800;900& display=swap");
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-color: #A351FB;
+    --secondary-color: #111926;
+
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10vh;
+    /* background: url(wallpapersden.com_windows-blue-mess_1920x1080.jpg); */
+    background-color: var(--secondary-color);
+}
+
+
+header{
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    justify-content: space-between;
+    background-color: #1E2837;
+    flex-wrap: wrap;
+    border-radius: 0px 0px 20px 20px;
+    padding: 10px;
+    width: 100vw;
+}
+
+.logo{
+    display: flex;
+    justify-content: flex;
+    align-items: center;
+    margin-left: 95px;
+    color: #D8B5FF;
+    /* flex-wrap: wrap; */
+}
+
+.navigation{
+    display: flex;
+    justify-content: flex-end;
+    align-items:center ;
+    width: 50vw;
+    margin-right: 100px;
+    
+}
+
+
+.navigation ul{
+    list-style: none;
+    display: flex;
+    gap: 50px;
+    justify-content: flex-start;
+    font-size: large;
+    flex-wrap: wrap;
+    color: #A351FB;
+}
+
+.navigation ul li a{
+    text-decoration: none;
+    color: #D8B5FF;
+}
+.navigation ul li a:hover{
+    text-decoration: underline;
+}
+
+.container {
+    width: 420px;
+    /* background: transparent; */
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 10px;
+    padding: 30px 40px;
+    backdrop-filter: blur(10px);
+    border: 1px solid gray;
+}
+
+.container h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.container .input-box {
+    width: 100%;
+    height: 100%;
+    /* background: rgb(66, 241, 31); */
+    margin: 30px 0;
+    position: relative;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 15px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: #fff;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+
+}
+
+.container .remember-me {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-me label input {
+    accent-color: #fff;
+    margin-right: 3px;
+}
+
+.remember-me a {
+    text-decoration: none;
+    color: white;
+}
+
+.remember-me a:hover {
+    text-decoration: underline;
+}
+
+.container .btn {
+    width: 100%;
+    height: 45px;
+    background: #ffff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    color: #333;
+    font-weight: 600;
+    transition: 1s; 
+}
+
+.container .btn:hover {
+    background: rgb(173, 173, 173);
+    color: white;
+    transform: scale(1.1, 1.1)
+    
+}
+
+
+.container .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin-top: 20px;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 669px) {
+    
+    header{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        justify-content: space-between;
+        background-color: #dcdcdc;
+        flex-wrap: wrap;
+        border-radius: 0px 0px 20px 20px;
+        padding: 10px;
+        width: 100vw;
+    }
+
+    .logo{
+        display: flex;
+        justify-content: flex;
+        align-items: center;
+        /* margin-left: 95px; */
+        color: #D8B5FF;
+        /* flex-wrap: wrap; */
+    }
+    
+    .navigation{
+        display: flex;
+        justify-content: flex-end;
+        align-items:center ;
+        width: auto;
+        /* margin-right: 100px; */
+        
+    }
+}
