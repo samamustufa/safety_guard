@@ -21,7 +21,6 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10vh;
-    /* background: url(wallpapersden.com_windows-blue-mess_1920x1080.jpg); */
     background-color: var(--secondary-color);
 }
 
