@@ -2,6 +2,7 @@
 *.mp4
 *.pt
 static\video
+settings.json
 # Django #
 *.log
 *.pot
