@@ -5,131 +5,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Output Video</title>
+    <title>Restricted Area Detection</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            gap: 30px;
-        }
-
-        .mainbox {
-            height: auto;
-            width: 98vw;
-            display: flex;
-            justify-content: space-around;
-        }
-
         .container {
+            height: 300px;
             width: auto;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: start;
-        }
-
-        .videocontainer {
-            height: auto;
-            margin-bottom: 28px;
-        }
-
-        .download a {
-            text-decoration: none;
-            padding: 5px 20px;
-            /* border-radius: 10px; */
-            color: white;
-            background-color: transparent;
-            border: 2px solid white;
-            margin-top: 5px;
-            font-size: large;
-            transition: 1s;
-        }
-
-        .download a:hover {
-            border: 2px solid black;
-            background-color: white;
-            color: black;
-            border-radius: 10px;
-        }
-
-        .chart-container {
-            height: auto;
-            width: 500px;
-            background-color: white;
-            border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
         }
 
-        #chart-div {
-            width: 400px;
-            height: 400px;
+        .container .inputfield {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            gap: 32px;
+            color: black;
+
+        }
+
+        .container .inputfield .custom-file-input {
+            font-size: larger;
+            margin-left: 124px;
+        }
+
+        .button {
+            position: relative;
+            padding: 8px 16px;
+            background-color: white;
+            border: none;
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border-radius: 40px;
+        }
+
+        .button--after {
+            position: relative;
+            padding: 8px 16px;
             background-color: transparent;
+            border: none;
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .button:active {
+            background: transparent;
+
+        }
+
+        .button__text {
+            font: bold 20px 'Quicksand', san-serif;
+            color: black;
+            transition: all 0.2s;
+        }
+
+        .button--loading::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 4px solid transparent;
+            background-color: var(--primary-color);
+            border-top-color: #000000;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+
+            to {
+                transform: rotate(1turn);
+            }
         }
     </style>
 </head>
 
 <body>
     {% include "header.html" %}
+    <div class="container">
+        <h1>Restricted Area Detection</h1>
+        <form action="{% url 'restricted_area_detection' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="inputfield">
+                <input type="file" name="video" class="custom-file-input" onchange="enableButton()">
+                <!-- <button type="submit">Upload</button> -->
+                <button type="submit" id="uploadButton" class="button" onclick="processButton()" disabled>
+                    <span class="button__text">Upload</span>
+                </button>
 
-    <div class="mainbox">
-        <div class="container">
-            <h1>Output Video</h1>
-            <div class="videocontainer">
-                <video width="640" height="480" controls autoplay>
-                    <source src="{% static 'video\\song.mp4' %}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
             </div>
-            <div class="download">
-                <a href="{% static 'video\\song.mp4' %}" download>DOWNLOAD</a>
-            </div>
-        </div>
-        <div class="chart-container">
-            <h1>Safety Result</h1>
-            <h2>Safety Percentage = {{ safety_percent }}%</h2>
-            <h2>Unsafety Percentage = {{ unsafety_percent }}%</h2>
-            <div id="chart-div">
-                <canvas id="myChart"></canvas>
-            </div>
-        </div>
+
+        </form>
     </div>
-
     <script>
-        // Data for the chartz
-        const data = {
-            labels: ['Safety', 'Unsafety'],
-            datasets: [{
-                label: 'Safety Result',
-                data: [40,60],
-            backgroundColor: [
-                'rgba(0, 255, 0, 0.5)',
-                'rgba(255, 0, 0, 0.5)'
-            ],
-            borderColor: [
-                'rgba(0, 255, 0, 1)',
-                'rgba(255, 0, 0, 1)'
-            ],
-            borderWidth: 1
-        }]
-};
+        function enableButton() {
+            const fileInput = document.querySelector('.custom-file-input');
+            const uploadButton = document.getElementById("uploadButton");
+            if (fileInput.value !== '') {
+                uploadButton.disabled = false;
+            } else {
+                uploadButton.disabled = true;
+            }
+        }
 
-        // Configuration options for the chart
-        const options = {
-            maintainAspectRatio: false,
-            responsive: true
-        };
+        function processButton() {
+            const button = document.getElementById("uploadButton");
+            button.querySelector('.button__text').style.display = 'none';
+            button.classList.add("button--after");
+            button.classList.add("button--loading");
 
-        // Create the chart
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: options
-        });
+            // Listen for the page to fully load
+            window.addEventListener('load', function () {
+                // Once the page is loaded, revert the button state
+                button.querySelector('.button__text').style.display = 'inline';
+                button.classList.remove("button--after");
+                button.classList.remove("button--loading");
+            });
+        }
     </script>
 
 </body>
