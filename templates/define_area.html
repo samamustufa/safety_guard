@@ -67,33 +67,38 @@
         }
 
         document.getElementById("submitCoordinates").addEventListener('click', function () {
-    var videoPathExists = coordinates.some(coord => 'video_path' in coord);
-    if (!videoPathExists) {
-        coordinates.push({ video_path: videoPath });
-    }
-    var coordinatesJSON = JSON.stringify({ coordinates: coordinates });
+            if (coordinates.length < 4) {
+                alert('Please define all four points to submit the coordinates.');
+                return;
+            }
 
-    axios.post(processUrl, { coordinates: coordinates }, {
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken // Include CSRF token in headers
-        },
-    })
-    .then(response => {
-        console.log("Response Data:", response.data);
-        if (response.data && response.data.success) {
-            window.location.href = "{% url 'restricted_area_result' %}";
-        } else {
-            console.error('Error in processing coordinates:', response.data.error);
-            alert('An error occurred while processing the coordinates. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An unexpected error occurred. Please try again.');
-    });
-});
+            var videoPathExists = coordinates.some(coord => 'video_path' in coord);
+            if (!videoPathExists) {
+                coordinates.push({ video_path: videoPath });
+            }
+            var coordinatesJSON = JSON.stringify({ coordinates: coordinates });
 
+            axios.post(processUrl, coordinatesJSON, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken // Include CSRF token in headers
+                },
+            })
+            .then(response => {
+                console.log("Response Data:", response.data);
+                if (response.data && response.data.success) {
+                    console.log('Response data:', response.data);
+                    // window.location.href = "{% url 'restricted_area_result' %}";
+                } else {
+                    console.error('Error in processing coordinates:', response.data.error);
+                    alert('An error occurred while processing the coordinates. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred. Please try again.');
+            });
+        });
 
         loadImage();
     });
