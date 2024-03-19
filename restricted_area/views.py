@@ -90,35 +90,33 @@ def process_restricted_area(request):
 
 
 def restricted_area_result(request):
-    # try:
-    # data_0 = request.body.decode('utf-8')
-    # print('data0:', data_0)
-    # Check if request body contains valid JSON data
-    # print(request.body)
-    if True:
-        print('inside body reqqqaqqqq')
-        # data = json.loads(data_0)
-        data = {}
-        person_count = data.get('person_count', 0)
+    try:
+        print('inside try')
+        # Check if request body contains valid JSON data
+        print(request.body)
+        if request.body:
+            print('inside body reqqqaqqqq')
+            data = json.loads(request.body)
+            person_count = data.get('person_count', 0)
 
-        uploaded_files = os.listdir(UPLOAD_FOLDER)
-        
-        if uploaded_files:
-            latest_uploaded_file = max(uploaded_files, key=lambda f: os.path.getctime(os.path.join(UPLOAD_FOLDER, f)))
-            os.remove(os.path.join(UPLOAD_FOLDER, latest_uploaded_file))
-        
-        return render(request, 'restricted_area_result.html', {'person_count': person_count, 'video_name': latest_uploaded_file})
+            uploaded_files = os.listdir(UPLOAD_FOLDER)
+            
+            if uploaded_files:
+                latest_uploaded_file = max(uploaded_files, key=lambda f: os.path.getctime(os.path.join(UPLOAD_FOLDER, f)))
+                os.remove(os.path.join(UPLOAD_FOLDER, latest_uploaded_file))
+            
+            return render(request, 'restricted_area_result.html', {'person_count': person_count, 'video_name': latest_uploaded_file})
 
-    else:
-        # Return an error response if request body is empty or malformed
-        return JsonResponse({'success': False, 'error': 'Invalid request body'}, status=400)
+        else:
+            # Return an error response if request body is empty or malformed
+            return JsonResponse({'success': False, 'error': 'Invalid request body'}, status=400)
 
-    # except Exception as e:
-    #     # Log the exception for debugging purposes
-    #     print(f"Error in restricted_area_result: {str(e)}")
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"Error in restricted_area_result: {str(e)}")
 
-    #     # Return an error response
-    #     return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
+        # Return an error response
+        return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
 
 

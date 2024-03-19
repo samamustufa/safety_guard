@@ -88,7 +88,7 @@
                 console.log("Response Data:", response.data);
                 if (response.data && response.data.success) {
                     console.log('Response data:', response.data);
-                    // window.location.href = "{% url 'restricted_area_result' %}";
+                    window.location.href = "{% url 'restricted_area_result' %}";
                 } else {
                     console.error('Error in processing coordinates:', response.data.error);
                     alert('An error occurred while processing the coordinates. Please try again.');
