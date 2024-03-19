@@ -10,9 +10,9 @@ from login.models import Login
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
-UPLOAD_FOLDER = os.path.join(settings.MEDIA_ROOT, 'upload_folder')
-FIRST_FRAME_FOLDER = os.path.join(settings.MEDIA_ROOT, 'first_frame')
-OUTPUT_FOLDER = os.path.join(settings.MEDIA_ROOT, 'output_folder')
+UPLOAD_FOLDER = r'D:\Users\mustufa\Desktop\django_a_file\version_1_ori\final_safetyweb\static\upload_folder'
+FIRST_FRAME_FOLDER = r'D:\Users\mustufa\Desktop\django_a_file\version_1_ori\final_safetyweb\static\first_frame'
+OUTPUT_FOLDER = r'D:\Users\mustufa\Desktop\django_a_file\version_1_ori\final_safetyweb\static\output_folder'
 
 def count_persons_entered_restricted_area(video, coordinates, user_id):
     # Initialize YOLO model
