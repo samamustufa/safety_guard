@@ -8,7 +8,10 @@ from login.models import Login
 import os
 import json
 import traceback
+from django.urls import reverse
 
+person_count = 0
+output_filename=""
 def restrictArea(request):
     try:
         return render(request,'restricted_page.html' )
@@ -47,6 +50,7 @@ def define_area(request, video_path, first_frame_path):
     return render(request, 'define_area.html', {'video_path': video_path, 'first_frame_path': first_frame_path})
 
 def process_restricted_area(request):
+    global person_count,output_filename
     try:
         # Get the JSON data from the request body
         data = request.body.decode('utf-8')
@@ -73,13 +77,13 @@ def process_restricted_area(request):
             raise ValueError("No video file uploaded")
 
         # Implement your AI code for person counting using the coordinates
-        person_count = count_persons_entered_restricted_area(video_path, converted_coordinates, user.id)  # Pass user.id instead of user
+        person_count, output_filename = count_persons_entered_restricted_area(video_path, converted_coordinates, user.id)  # Pass user.id instead of user
 
         # Store restricted area data associated with the single user
         # store_restricted_area_data(video_path, person_count, user.id)  # Pass user.id instead of user
 
         # Return person_count in the JSON response
-        return JsonResponse({'success': True, 'person_count': person_count})
+        return JsonResponse({'success': True, 'person_count': person_count, 'output_filename': output_filename})
             
     except Exception as e:
         # Log the exception traceback for debugging purposes
@@ -89,47 +93,16 @@ def process_restricted_area(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+
 def restricted_area_result(request):
+    global person_count, output_filename
+
     try:
-        print('inside try')
-        # Check if request body contains valid JSON data
-        print(request.body)
-        if request.body:
-            print('inside body reqqqaqqqq')
-            data = json.loads(request.body)
-            person_count = data.get('person_count', 0)
-
-            uploaded_files = os.listdir(UPLOAD_FOLDER)
-            
-            if uploaded_files:
-                latest_uploaded_file = max(uploaded_files, key=lambda f: os.path.getctime(os.path.join(UPLOAD_FOLDER, f)))
-                os.remove(os.path.join(UPLOAD_FOLDER, latest_uploaded_file))
-            
-            return render(request, 'restricted_area_result.html', {'person_count': person_count, 'video_name': latest_uploaded_file})
-
-        else:
-            # Return an error response if request body is empty or malformed
-            return JsonResponse({'success': False, 'error': 'Invalid request body'}, status=400)
-
+        return render(request, 'restricted_output.html', {'person_count': person_count, 'output_filename': output_filename})
     except Exception as e:
         # Log the exception for debugging purposes
         print(f"Error in restricted_area_result: {str(e)}")
 
         # Return an error response
-        return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
-
-
-
-def view_restricted_area_video(request):
-    video_directory = os.path.join(settings.MEDIA_ROOT, 'output')
-    video_filename = 'output_video.mp4'
-    video_path = os.path.join(video_directory, video_filename)
-
-    # Set response headers
-    headers = {
-        'Content-Type': 'video/mp4',
-        'Accept-Ranges': 'bytes',
-    }
-
-    return HttpResponse(open(video_path, 'rb'), content_type='video/mp4')
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
 

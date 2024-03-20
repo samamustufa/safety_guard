@@ -1,6 +1,11 @@
-{% include "header.html" %}
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <title>Restricted Area Result</title>
 <style>
     .canvas-container {
         height: 100%;
@@ -10,19 +15,30 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        
     }
-
+    
     #restrictedAreaCanvas {
         border: 1px solid #ddd;
         margin-top: 10px;
         display: block;
     }
-
+    
     #submitCoordinates {
         margin-top: 10px;
         display: block;
     }
+    .canvas-container h1,p{
+        color: white;
+    }
+    #submitCoordinates{
+        padding: 4px 8px;
+        font-size: x-large;
+    }
 </style>
+</head>
+<body>
+{% include "header.html" %}
 
 <div class="canvas-container">
     <h1>Define Restricted Area</h1>
@@ -42,6 +58,9 @@
 
         var canvas = document.getElementById("restrictedAreaCanvas");
         var ctx = canvas.getContext("2d");
+
+        var resultUrl = "{% url 'restricted_area_result' %}";
+
 
         function loadImage() {
             var img = new Image();
@@ -84,22 +103,23 @@
                     'X-CSRFToken': csrfToken // Include CSRF token in headers
                 },
             })
-            .then(response => {
-                console.log("Response Data:", response.data);
-                if (response.data && response.data.success) {
-                    console.log('Response data:', response.data);
-                    window.location.href = "{% url 'restricted_area_result' %}";
-                } else {
-                    console.error('Error in processing coordinates:', response.data.error);
-                    alert('An error occurred while processing the coordinates. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An unexpected error occurred. Please try again.');
-            });
+                .then(response => {
+                    console.log("Response Data:", response.data);
+                    if (response.data && response.data.success) {
+                        window.location.href = "{% url 'restricted_area_result' %}";
+                    } else {
+                        console.error('Error in processing coordinates:', response.data.error);
+                        alert('An error occurred while processing the coordinates. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again.');
+                });
         });
 
         loadImage();
     });
 </script>
+
+</body>

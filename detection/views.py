@@ -62,11 +62,4 @@ def test(request):
         "total": total
                 }
                 }
-
-    # safety_data = {
-    #     'video_path': video_path,
-    #     'safety_percent': safety_percent,
-    #     'unsafety_percent': unsafety_percent,
-    #     'total': total
-    # }
     return render(request, 'dtect_out.html', context['safety_data'])

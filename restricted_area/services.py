@@ -7,6 +7,7 @@ import json  # Import the json module
 from django.conf import settings
 from .models import RestrictedAreaData
 from login.models import Login
+import uuid
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -22,11 +23,15 @@ def count_persons_entered_restricted_area(video, coordinates, user_id):
     # Open video for processing
     video_capture = cv2.VideoCapture(video)
     fps = int(video_capture.get(cv2.CAP_PROP_FPS))
+    H = int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    W = int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    
 
     # Define the codec and create a VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # MP4V codec
-    output_video_path = os.path.join(OUTPUT_FOLDER, 'output_video.mp4')
-    out = cv2.VideoWriter(output_video_path, fourcc, fps, (720, 480))
+    output_filename = 'output-' + str(uuid.uuid4()) + '.mp4'
+    output_video_path = os.path.join(OUTPUT_FOLDER, output_filename)
+    out = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'avc1'), fps, (720, 480))
     # Initialize variables
     persons_entered_count = 0
 
@@ -94,7 +99,7 @@ def count_persons_entered_restricted_area(video, coordinates, user_id):
         video_capture.release()
         out.release()
         store_restricted_area_data(video, persons_entered_count, user_id)
-    return persons_entered_count
+    return persons_entered_count, output_filename
 
 from django.core.files.storage import FileSystemStorage
 

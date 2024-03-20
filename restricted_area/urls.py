@@ -7,5 +7,4 @@ urlpatterns = [
     path('define_area/<str:video_path>/<str:first_frame_path>/', views.define_area, name='define_area'),
     path('process_restricted_area/', views.process_restricted_area, name='process_restricted_area'),
     path('restricted_area_result/', views.restricted_area_result, name='restricted_area_result'),
-    path('view_restricted_area_video/', views.view_restricted_area_video, name='view_restricted_area_video'),
     ]

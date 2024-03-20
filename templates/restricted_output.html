@@ -1,12 +1,25 @@
 {% load static %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Restricted Area Result</title>
+</head>
+<body>
+    <h1>Restricted Area Result</h1>
+    <p>Person count: {{ person_count }}</p>
+    <p>Output filename: {{ output_filename }}</p>
+</body>
+</html> -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <title>Restricted Area Result</title>
     <style>
-        body {
+        /* body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
@@ -16,7 +29,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-        }
+        } */
 
         h1, p, video, .button-container {
             margin-bottom: 20px;
@@ -49,11 +62,11 @@
 </head>
 <body>
     <h1>Restricted Area Result</h1>
-    <p>Video Name: {{ video_name }}</p>
+    <p>Video Name: {{ output_filename }}</p>
     <p>Number of persons detected in the restricted area: {{ person_count }}</p>
     
-    <video controls>
-        <source src="{% url 'view_restricted_area_video' %}" type="video/mp4">
+    <video controls controlsList="nodownload">
+        <source src="{% static 'output_folder/' %}{{ output_filename }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
