@@ -22,12 +22,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10vh;
+    gap: 5vh;
     /* min-height: 100vh; */
     /* background: url(wallpapersden.com_windows-blue-mess_1920x1080.jpg); */
     background-color: var(--background-color);
     /* background-color: #333333; */
     /* background-color: royalblue; */
+    overflow-x: hidden;
 }
 
 
@@ -165,7 +166,7 @@ header {
     /* border: 2px solid white; */
     grid-template-columns: 1fr 1fr;
     gap: 15vw;
-    height: 90vh;
+    height: 72vh;
     row-gap: 10px;
 }
 

@@ -1,125 +1,150 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <title>Restricted Area Result</title>
-<style>
-    .canvas-container {
-        height: 100%;
-        /* Adjust this value if needed */
-        margin: 0;
-        flex-direction: column;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-    }
-    
-    #restrictedAreaCanvas {
-        border: 1px solid #ddd;
-        margin-top: 10px;
-        display: block;
-    }
-    
-    #submitCoordinates {
-        margin-top: 10px;
-        display: block;
-    }
-    .canvas-container h1,p{
-        color: white;
-    }
-    #submitCoordinates{
-        padding: 4px 8px;
-        font-size: x-large;
-    }
-</style>
-</head>
-<body>
-{% include "header.html" %}
-
-<div class="canvas-container">
-    <h1>Define Restricted Area</h1>
-    <p>Click on the four points to define the restricted area.</p>
-    <canvas id="restrictedAreaCanvas" style="border: 1px solid #ddd;"></canvas>
-    <button id="submitCoordinates">Submit Coordinates</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var coordinates = [];
-        var videoPath = "{{ video_path }}";
-        var firstFramePath = "{% static 'first_frame/first_frame.jpg' %}";
-        var processUrl = "{% url 'process_restricted_area' %}";
-        var csrfToken = "{{ csrf_token }}"; // Retrieve CSRF token from Django template
-
-        var canvas = document.getElementById("restrictedAreaCanvas");
-        var ctx = canvas.getContext("2d");
-
-        var resultUrl = "{% url 'restricted_area_result' %}";
-
-
-        function loadImage() {
-            var img = new Image();
-            img.onload = function () {
-                canvas.width = 720;
-                canvas.height = 480;
-                var startX = (canvas.width - img.width) / 2;
-                var startY = (canvas.height - img.height) / 2;
-                ctx.drawImage(img, startX, startY, img.width, img.height);
-                canvas.addEventListener('click', function (e) {
-                    var rect = canvas.getBoundingClientRect();
-                    var x = e.clientX - rect.left;
-                    var y = e.clientY - rect.top;
-                    coordinates.push({ x: x, y: y });
-                    ctx.beginPath();
-                    ctx.arc(x, y, 5, 0, 2 * Math.PI);
-                    ctx.fillStyle = 'red';
-                    ctx.fill();
-                    ctx.stroke();
-                });
-            };
-            img.src = firstFramePath;
+    <style>
+        body{
+            gap:8vh;
         }
 
-        document.getElementById("submitCoordinates").addEventListener('click', function () {
-            if (coordinates.length < 4) {
-                alert('Please define all four points to submit the coordinates.');
-                return;
+        .canvas-container {
+            height: 100%;
+            /* Adjust this value if needed */
+            margin: 0;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        #restrictedAreaCanvas {
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            display: block;
+        }   
+
+        #submitCoordinates {
+            margin-top: 25px;
+            padding: 7px 10px;
+            font-size: x-large;
+            border: none;
+            border-radius: 13px;
+            color: white;
+            background-color: #A351FB;
+            transition: 0.5s;
+        }
+        
+        #submitCoordinates:hover {
+            background-color: #ffffff;
+            color: #000;
+            transform: scale(1, 1.1);
+            cursor: pointer;
+        }
+
+        .canvas-container h1,
+        p {
+            color: white;
+            padding: 6px;
+            text-align: center;
+        }
+
+        #submitCoordinates {
+            padding: 4px 8px;
+            font-size: x-large;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "header.html" %}
+
+    <div class="canvas-container">
+        <h1>Define Restricted Area</h1>
+        <p>Click on the four points to define the restricted area.</p>
+        <canvas id="restrictedAreaCanvas" style="border: 1px solid #ddd;"></canvas>
+        <button id="submitCoordinates">Submit Coordinates</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var coordinates = [];
+            var videoPath = "{{ video_path }}";
+            var firstFramePath = "{% static 'first_frame/first_frame.jpg' %}";
+            var processUrl = "{% url 'process_restricted_area' %}";
+            var csrfToken = "{{ csrf_token }}"; // Retrieve CSRF token from Django template
+
+            var canvas = document.getElementById("restrictedAreaCanvas");
+            var ctx = canvas.getContext("2d");
+
+            var resultUrl = "{% url 'restricted_area_result' %}";
+
+
+            function loadImage() {
+                var img = new Image();
+                img.onload = function () {
+                    canvas.width = 720;
+                    canvas.height = 480;
+                    var startX = (canvas.width - img.width) / 2;
+                    var startY = (canvas.height - img.height) / 2;
+                    ctx.drawImage(img, startX, startY, img.width, img.height);
+                    canvas.addEventListener('click', function (e) {
+                        var rect = canvas.getBoundingClientRect();
+                        var x = e.clientX - rect.left;
+                        var y = e.clientY - rect.top;
+                        coordinates.push({ x: x, y: y });
+                        ctx.beginPath();
+                        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = 'red';
+                        ctx.fill();
+                        ctx.stroke();
+                    });
+                };
+                img.src = firstFramePath;
             }
 
-            var videoPathExists = coordinates.some(coord => 'video_path' in coord);
-            if (!videoPathExists) {
-                coordinates.push({ video_path: videoPath });
-            }
-            var coordinatesJSON = JSON.stringify({ coordinates: coordinates });
+            document.getElementById("submitCoordinates").addEventListener('click', function () {
+                if (coordinates.length < 4) {
+                    alert('Please define all four points to submit the coordinates.');
+                    return;
+                }
 
-            axios.post(processUrl, coordinatesJSON, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken // Include CSRF token in headers
-                },
-            })
-                .then(response => {
-                    console.log("Response Data:", response.data);
-                    if (response.data && response.data.success) {
-                        window.location.href = "{% url 'restricted_area_result' %}";
-                    } else {
-                        console.error('Error in processing coordinates:', response.data.error);
-                        alert('An error occurred while processing the coordinates. Please try again.');
-                    }
+                var videoPathExists = coordinates.some(coord => 'video_path' in coord);
+                if (!videoPathExists) {
+                    coordinates.push({ video_path: videoPath });
+                }
+                var coordinatesJSON = JSON.stringify({ coordinates: coordinates });
+
+                axios.post(processUrl, coordinatesJSON, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken // Include CSRF token in headers
+                    },
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An unexpected error occurred. Please try again.');
-                });
-        });
+                    .then(response => {
+                        console.log("Response Data:", response.data);
+                        if (response.data && response.data.success) {
+                            window.location.href = "{% url 'restricted_area_result' %}";
+                        } else {
+                            console.error('Error in processing coordinates:', response.data.error);
+                            alert('An error occurred while processing the coordinates. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An unexpected error occurred. Please try again.');
+                    });
+            });
 
-        loadImage();
-    });
-</script>
+            loadImage();
+        });
+        
+    </script>
 
 </body>
