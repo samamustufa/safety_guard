@@ -142,7 +142,8 @@ def get_first_frame(video_path):
             raise ValueError("Empty frame or invalid frame size")
 
         frame = cv2.resize(frame, (720, 480))
-        frame_path = os.path.join(FIRST_FRAME_FOLDER, "first_frame.jpg")
+        frame_name = 'first_frame-' + str(uuid.uuid4()) + '.jpg'
+        frame_path = os.path.join(FIRST_FRAME_FOLDER, frame_name)
         cv2.imwrite(frame_path, frame)
         cap.release()
         return frame_path
